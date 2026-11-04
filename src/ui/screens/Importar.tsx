@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { novaOperacao } from "../../domain/operation";
+import { novaOperacao, sugerirNumero } from "../../domain/operation";
 import type { ImportPreview } from "../../import/preview";
 import { aplicarImportacao } from "../../import/preview";
 import { lerArquivoTexto } from "../../import/readText";
 import { interpretarTxtColega } from "../../import/txtColega";
 import { ehTxtNativo, interpretarTxtNativo } from "../../import/txtNativo";
 import { lerBackup, type Backup } from "../../store/backup";
-import { carregarOperacao } from "../../store/repo";
+import { carregarOperacao, listarOperacoes } from "../../store/repo";
 import { LeitorQr } from "../components/LeitorQr";
 import { carregarConfig, type Ir } from "../state";
 
@@ -48,7 +48,8 @@ export function Importar({ ir }: { ir: Ir }) {
     if (!prev) return;
     const id = comoCopia || !prev.operacao.id ? crypto.randomUUID() : prev.operacao.id;
     const base = novaOperacao({ nome: prev.operacao.nome ?? "Log importado" }, prev.operacao.inicio ?? new Date().toISOString(), id);
-    const op = await aplicarImportacao(prev, base);
+    const numero = prev.operacao.numero || sugerirNumero(carregarConfig().sigla, new Date().getFullYear(), (await listarOperacoes()).map((o) => o.numero));
+    const op = await aplicarImportacao({ ...prev, operacao: { ...prev.operacao, numero } }, base);
     ir({ nome: "log", id: op.id });
   };
 

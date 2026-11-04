@@ -63,3 +63,4 @@ textarea { min-height: 72px; }
 .qr img { background: #fff; padding: 8px; max-width: 100%; height: auto; }
 .leitor-qr video { width: 100%; max-height: 50vh; background: #000; }
 .progresso { font-size: 1.5rem; font-weight: 700; }
+.notas span { min-width: 44px; align-self: center; font-weight: 700; }

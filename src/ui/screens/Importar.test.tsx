@@ -29,7 +29,7 @@ test("prévia do log do colega e só grava ao confirmar", async () => {
   expect(await repo.listarOperacoes()).toEqual([]);
   await userEvent.click(screen.getByRole("button", { name: "Confirmar importação" }));
   const [o] = await repo.listarOperacoes();
-  expect(o).toMatchObject({ frequencia: "145.210 MHz", data: "2026-10-31" });
+  expect(o).toMatchObject({ frequencia: "145.210 MHz", data: "2026-10-31", numero: `REER-PR-${new Date().getFullYear()}-001` });
   expect((await repo.carregarOperacao(o!.id))?.entradas).toHaveLength(37);
   expect(ir).toHaveBeenCalledWith({ nome: "log", id: o!.id });
 });

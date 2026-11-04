@@ -161,3 +161,9 @@ test("falha ao gravar correção avisa", async () => {
   await userEvent.click(screen.getByRole("button", { name: "Confirmar correção" }));
   expect(await screen.findByText(/Não foi possível salvar: falhou/)).toBeInTheDocument();
 });
+
+test("as fileiras de sinal mostram QSA e QRK", async () => {
+  renderizar();
+  expect(await screen.findByText("QSA", { selector: ".notas span" })).toBeInTheDocument();
+  expect(screen.getByText("QRK", { selector: ".notas span" })).toBeInTheDocument();
+});

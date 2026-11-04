@@ -114,6 +114,7 @@ export function RegistroForm({ op, estacoes, entradas, operador, agora, aoRegist
 
   const nota = (rotulo: string, valor: number | undefined, set: (v: number | undefined) => void) => (
     <div className="notas" role="group" aria-label={rotulo}>
+      <span aria-hidden="true">{rotulo}</span>
       {[5, 4, 3, 2, 1].map((n) => (
         <button key={n} type="button" aria-pressed={valor === n} aria-label={`${rotulo} ${n}`} onClick={() => set(valor === n ? undefined : n)}>{n}</button>
       ))}
