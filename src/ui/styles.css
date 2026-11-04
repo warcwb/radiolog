@@ -21,3 +21,23 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .abas { position: fixed; bottom: 0; left: 0; right: 0; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--fundo); border-top: 1px solid var(--borda); }
 .abas button { border-radius: 0; border: 0; }
 .abas button[aria-current="page"] { background: var(--destaque); color: #fff; }
+
+.cabecalho-op { position: sticky; top: 0; background: var(--fundo); padding: 6px 0; border-bottom: 1px solid var(--borda); z-index: 2; }
+.relogio { font-variant-numeric: tabular-nums; font-weight: 700; }
+.faixa-alertas { background: #b00020; color: #fff; padding: 6px 10px; border-radius: 8px; margin: 6px 0; font-weight: 700; }
+.faixa-alertas p { margin: 2px 0; }
+.registro { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+.linha { display: flex; gap: 6px; } .linha input { flex: 1; }
+.sugestoes, .notas, .tipos { display: flex; gap: 6px; flex-wrap: wrap; }
+.notas button { min-width: 48px; }
+button[aria-pressed="true"] { background: var(--ok); color: #fff; border-color: var(--ok); }
+.registrar { flex: 2; font-size: 1.2rem; }
+.mini-cadastro { border: 2px solid var(--destaque); border-radius: 8px; }
+.entradas { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-direction: column; gap: 4px; }
+.entradas li { padding: 6px 8px; border-radius: 6px; background: var(--suave); cursor: pointer; }
+.entradas .seq { opacity: .7; } .entradas .tipo { opacity: .8; font-size: .9em; }
+.prec-emergencia { background: #b00020 !important; color: #fff; }
+.prec-prioridade { background: var(--laranja) !important; color: #000; }
+.corrigida .texto { text-decoration: line-through; }
+.nota { margin-left: 6px; font-style: italic; }
+.detalhe { border: 2px solid var(--borda); border-radius: 8px; padding: 8px; margin: 6px 0; }

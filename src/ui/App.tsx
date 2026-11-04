@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Configuracoes } from "./screens/Configuracoes";
+import { LogAoVivo } from "./screens/LogAoVivo";
 import { NovaOperacao } from "./screens/NovaOperacao";
 import { Operacoes } from "./screens/Operacoes";
 import { carregarConfig, type Config, type Tela } from "./state";
@@ -20,6 +21,7 @@ export function App({ avisos = [] }: { avisos?: string[] }) {
   switch (tela.nome) {
     case "nova": conteudo = <NovaOperacao ir={ir} />; break;
     case "config": conteudo = <Configuracoes aoSalvar={aplicarAparencia} />; break;
+    case "log": conteudo = <LogAoVivo id={tela.id} ir={ir} />; break;
     default: conteudo = <Operacoes ir={ir} />;
   }
 
@@ -34,6 +36,19 @@ export function App({ avisos = [] }: { avisos?: string[] }) {
       </header>
       {avisos.map((a) => <p key={a} className="aviso" role="alert">{a}</p>)}
       <main>{conteudo}</main>
+      {"id" in tela && <Abas tela={tela} ir={ir} />}
     </div>
+  );
+}
+
+const ABAS = [["log", "Log"]] as const;
+
+function Abas({ tela, ir }: { tela: Tela & { id: string }; ir: (t: Tela) => void }) {
+  return (
+    <nav className="abas" aria-label="Operação">
+      {ABAS.map(([nome, rotulo]) => (
+        <button key={nome} aria-current={tela.nome === nome ? "page" : undefined} onClick={() => ir({ nome, id: tela.id })}>{rotulo}</button>
+      ))}
+    </nav>
   );
 }
