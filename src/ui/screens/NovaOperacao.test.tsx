@@ -40,3 +40,25 @@ test("copia configuração de operação anterior", async () => {
   expect(screen.getByLabelText("Repetidora")).toHaveValue("PY5CTV");
   expect(screen.getByLabelText("Número")).toHaveValue(`REER-PR-${new Date().getFullYear()}-${new Date().getFullYear() === 2026 ? "032" : "001"}`);
 });
+
+test("todos os campos da rede são gravados", async () => {
+  render(<NovaOperacao ir={vi.fn()} />);
+  await screen.findByDisplayValue(/REER-PR-/);
+  const digitar = (r: string, v: string) => userEvent.type(screen.getByLabelText(r), v);
+  await digitar("Nome da operação", "Exercício");
+  await userEvent.selectOptions(screen.getByLabelText("Tipo"), "EXERCICIO");
+  await digitar("Órgão apoiado", "Defesa Civil");
+  await digitar("Rede", "REER-PR");
+  await digitar("Frequência", "145.210");
+  await digitar("Offset", "-0.6");
+  await digitar("Tom", "88.5");
+  await userEvent.clear(screen.getByLabelText("Modo"));
+  await digitar("Modo", "C4FM");
+  await digitar("NCS (controlador da rede)", "py5abc");
+  await digitar("Equipamento da estação", "FTM-100D");
+  await digitar("Grid", "GG54jm");
+  await userEvent.selectOptions(screen.getByLabelText("Fuso"), "UTC");
+  await userEvent.click(screen.getByRole("button", { name: "Começar operação" }));
+  const [s] = await listarOperacoes();
+  expect(s).toMatchObject({ tipo: "EXERCICIO", orgaoApoiado: "Defesa Civil", rede: "REER-PR", offset: "-0.6", tom: "88.5", modo: "C4FM", fuso: "UTC", ncs: { indicativo: "PY5ABC" }, estacaoLog: { equipamento: "FTM-100D", grid: "GG54jm" } });
+});

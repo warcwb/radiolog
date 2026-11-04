@@ -135,3 +135,29 @@ test("indicativo vazio avisa", async () => {
   await userEvent.click(await screen.findByRole("button", { name: "REGISTRAR" }));
   expect(screen.getByText("Informe o indicativo")).toBeInTheDocument();
 });
+
+test("hora inválida avisa e não grava", async () => {
+  renderizar();
+  await userEvent.type(await screen.findByLabelText("Indicativo"), "PU5ONI");
+  await userEvent.type(screen.getByLabelText("Hora"), "25:00");
+  await userEvent.click(screen.getByRole("button", { name: "REGISTRAR" }));
+  expect(screen.getByText("Hora inválida: 25:00")).toBeInTheDocument();
+  expect(await entradas()).toHaveLength(1);
+});
+
+test("ditado pelo microfone preenche o texto quando o navegador oferece", async () => {
+  class Rec { lang = ""; onresult: (e: unknown) => void = () => undefined; start() { this.onresult({ results: { 0: { 0: { transcript: "tudo certo" } } } }); } }
+  (window as unknown as { webkitSpeechRecognition: unknown }).webkitSpeechRecognition = Rec;
+  renderizar();
+  await userEvent.click(await screen.findByRole("button", { name: "Ditar" }));
+  expect(screen.getByLabelText("Texto")).toHaveValue("tudo certo");
+  delete (window as unknown as { webkitSpeechRecognition?: unknown }).webkitSpeechRecognition;
+});
+
+test("falha ao gravar correção avisa", async () => {
+  renderizar({ acoes: { acrescentarCorrecao: () => Promise.reject(new Error("falhou")) } });
+  await userEvent.click(await screen.findByText("#1"));
+  await userEvent.click(screen.getByRole("button", { name: "Corrigir" }));
+  await userEvent.click(screen.getByRole("button", { name: "Confirmar correção" }));
+  expect(await screen.findByText(/Não foi possível salvar: falhou/)).toBeInTheDocument();
+});

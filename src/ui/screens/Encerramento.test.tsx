@@ -34,6 +34,7 @@ test("bloqueia sem saída e libera com justificativa; encerra e oferece document
   await userEvent.click(await screen.findByRole("button", { name: "Gerar ICS 309" }));
   expect(baixar).toHaveBeenCalledWith("REER-PR-2026-031-ics309.pdf", expect.any(Uint8Array), "application/pdf");
   const toBlob = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation((cb) => cb(new Blob(["png"])));
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
   await userEvent.click(screen.getByRole("button", { name: "Boletim final SSTV" }));
   expect(baixar).toHaveBeenCalledWith("REER-PR-2026-031-sstv-encerramento-1.png", expect.any(Blob), "image/png");
   toBlob.mockRestore();

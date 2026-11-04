@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Configuracoes } from "./screens/Configuracoes";
 import { Encerramento } from "./screens/Encerramento";
+import { Enviar } from "./screens/Enviar";
+import { Importar } from "./screens/Importar";
 import { Estacoes } from "./screens/Estacoes";
 import { LogAoVivo } from "./screens/LogAoVivo";
 import { NovaOperacao } from "./screens/NovaOperacao";
@@ -26,6 +28,8 @@ export function App({ avisos = [] }: { avisos?: string[] }) {
     case "log": conteudo = <LogAoVivo id={tela.id} ir={ir} />; break;
     case "estacoes": conteudo = <Estacoes id={tela.id} />; break;
     case "encerrar": conteudo = <Encerramento id={tela.id} />; break;
+    case "enviar": conteudo = <Enviar id={tela.id} />; break;
+    case "importar": conteudo = <Importar ir={ir} />; break;
     default: conteudo = <Operacoes ir={ir} />;
   }
 
@@ -45,7 +49,7 @@ export function App({ avisos = [] }: { avisos?: string[] }) {
   );
 }
 
-const ABAS = [["log", "Log"], ["estacoes", "Estações"], ["encerrar", "Encerrar"]] as const;
+const ABAS = [["log", "Log"], ["estacoes", "Estações"], ["enviar", "Enviar"], ["encerrar", "Encerrar"]] as const;
 
 function Abas({ tela, ir }: { tela: Tela & { id: string }; ir: (t: Tela) => void }) {
   return (
