@@ -1,0 +1,58 @@
+LOG QRG145.210MHz
+
+2026.10.31
+Disponibilidade: Das 14:00hrs às 16:00hrs
+GridLocator: GG54jm
+
+Yaesu FTM-100D
+UVS-300 3x5/8VHF(8.3dBi) 8x5/8UHF(11.715dBi)
+20W
+
+Adjunto PU5NOC - 1ªReg. REER-PR
+
+14:00 PU5NOC                          - Em QRV
+14:00 PU5ONI   QSA-5 QRK-5 - Edilson
+14:00 PU5JCL   QSA-5 QRK-5 
+14:00 PU5MHE   QSA-5 QRK-5 - Eduardo  - Informou que BaseCOSMO com QRK baixo pela manhã.
+14:00 PU5RVL   QSA-5 QRK-4 - Kleber   - Baofeng
+14:00 PU5SYY   QSA-5 QRK-5 - Sussumo
+14:05 PU5ONI   QSA-5 QRK-5 - Edilson  - Deslocamento BaseCOSMO-Prainha
+14:15 PU5NOC                          - Em QRV
+14:15 PU5VAZ   QSA-5 QRK-5 - Jurandir - Tatuquara - IC-V8 com FlowerPot 
+14:16 PY5CSM   QSA-5 QRK-5 - Charles  - Agua Verde
+14:28 PU5NOC		              - Em QRV
+14:30 PU5ONI   QSA-5 QRK-3 - Edilson  - Descendo pelas pedras em direção à Prainha - Tempo bom - 19ºC - Seco
+14:38 PY5JEF   QSA-5 QRK-5 
+14:40 PU5RSB   QSA-5 QRK-5
+14:43 PU5???   QSA-5 QRK-2
+14:48 PU5NOC 		              - Em QRV
+15:05 PU5NOC 		              - EM QRV
+15:06 PY5CSM   QSA-5 QRK-5            - Em QRV
+15:06 PY5JEF   QSA-5 QRK-5            - EM QRV
+15:15 PU5ONI   QSA-5 QRK-3
+15:15 PY5TD    QSA-5 QRK-5
+15:21 PU5NOC                          - EM QRV
+15:21 PU5JEF   QSA-5 QRK-5            - EM QRV
+15:27 PY5JEF   QSA-5 QRK-5	    
+15:29 BaseCosmo			      - Poucas pessoas no parque - Tempo instável.
+15:30 ?????? 
+15:31 PU5MRT   QSA-5 QRK-5 - Marco    - Em QRV - Com Escoteiros
+15:32 PU5JEF   QSA-5 QRK-5            - Em QRV
+15:32 PU5RSB   QSA-5 QRK-5            - Em QRV
+15:45 PU5ONI   QSA-5 QRK-5 
+- 35 pessoas visitaram o parque a grande maioria desceram em seguranca.
+- NOGAROLI e SANGIL Plantonistas do COSMO - SABADO DOMINGO
+- 25ºC - SEM CHUVA
+- MAXIMILIANO CARLOS MARCELOS na companhia de Edilson (PU5ONI PU5OCM PU5OMN)
+- MAX Responsável pela LOGISTICA
+- EM MORRETES, subindo pra Curitiba
+- Tempo fechando - SEM CHUVA
+- Via PY5CTV(ARPA) 145.210MHz 
+
+
+
+
+
+
+
+
