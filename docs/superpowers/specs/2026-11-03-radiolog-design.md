@@ -42,13 +42,13 @@ Também não foi verificado se a Anatel tem regras sobre log ou intervalo de ide
 ## 3. Arquitetura
 
 - **Tipo:** PWA (aplicativo web instalável), estático, sem servidor. Um *service worker* guarda todos os arquivos do app em cache para uso offline.
-- **Tecnologia:** TypeScript estrito, Vite e React 18 (mesma base do frontend do RadioForge, neste mesmo repositório).
+- **Tecnologia:** TypeScript estrito, Vite e React 18 (mesma base do frontend do RadioForge).
   - Dados: IndexedDB via Dexie.
   - PDF: jsPDF.
   - QR: `qrcode` para gerar, `BarcodeDetector` nativo com `jsQR` de reserva para ler.
   - Compressão: `fflate`.
   - Testes: Vitest (unidade) e Playwright (ponta a ponta).
-- **Local no repositório:** pasta `radiolog/` do RadioForge, como projeto independente (não usa o backend Python, porque precisa rodar no celular sem nada instalado).
+- **Repositório:** `warcwb/radiolog`, próprio e independente do RadioForge (precisa rodar no celular sem nada instalado).
 - **Hospedagem:** qualquer servidor estático (por exemplo GitHub Pages). Também pode ser aberto a partir de um arquivo ZIP local com `npx serve`.
 - **Módulos** (cada um com interface própria e testável isoladamente):
 
