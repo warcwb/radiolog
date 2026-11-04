@@ -41,3 +41,12 @@ button[aria-pressed="true"] { background: var(--ok); color: #fff; border-color: 
 .corrigida .texto { text-decoration: line-through; }
 .nota { margin-left: 6px; font-style: italic; }
 .detalhe { border: 2px solid var(--borda); border-radius: 8px; padding: 8px; margin: 6px 0; }
+
+.tabela-estacoes { width: 100%; border-collapse: collapse; }
+.tabela-estacoes th, .tabela-estacoes td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--borda); }
+.tabela-estacoes select { min-height: 40px; }
+.sit-sem_contato { background: #b00020; color: #fff; }
+.sit-saida { opacity: .6; }
+.checklist { padding-left: 18px; } .checklist .pendente { color: #ff6b6b; font-weight: 700; } .checklist .ok { color: #4caf50; }
+textarea { min-height: 72px; }
+@media (max-width: 600px) { .tabela-estacoes th:nth-child(5), .tabela-estacoes td:nth-child(5) { display: none; } }

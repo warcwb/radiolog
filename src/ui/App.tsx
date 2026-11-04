@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Configuracoes } from "./screens/Configuracoes";
+import { Encerramento } from "./screens/Encerramento";
+import { Estacoes } from "./screens/Estacoes";
 import { LogAoVivo } from "./screens/LogAoVivo";
 import { NovaOperacao } from "./screens/NovaOperacao";
 import { Operacoes } from "./screens/Operacoes";
@@ -22,6 +24,8 @@ export function App({ avisos = [] }: { avisos?: string[] }) {
     case "nova": conteudo = <NovaOperacao ir={ir} />; break;
     case "config": conteudo = <Configuracoes aoSalvar={aplicarAparencia} />; break;
     case "log": conteudo = <LogAoVivo id={tela.id} ir={ir} />; break;
+    case "estacoes": conteudo = <Estacoes id={tela.id} />; break;
+    case "encerrar": conteudo = <Encerramento id={tela.id} />; break;
     default: conteudo = <Operacoes ir={ir} />;
   }
 
@@ -41,7 +45,7 @@ export function App({ avisos = [] }: { avisos?: string[] }) {
   );
 }
 
-const ABAS = [["log", "Log"]] as const;
+const ABAS = [["log", "Log"], ["estacoes", "Estações"], ["encerrar", "Encerrar"]] as const;
 
 function Abas({ tela, ir }: { tela: Tela & { id: string }; ir: (t: Tela) => void }) {
   return (
