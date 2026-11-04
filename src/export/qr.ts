@@ -19,7 +19,7 @@ export class MontadorQr {
   private id = "";
 
   adicionar(texto: string): { recebidas: number; total: number } {
-    const m = RE_PARTE.exec(texto.trim());
+    const m = RE_PARTE.exec(texto.replace(/^[\r\n]+|[\r\n]+$/g, "")); // espaço é dado válido em base45: não usar trim()
     if (!m) throw new Error("QR não é do RadioLog");
     const [, i, n, id, dados] = m as unknown as [string, string, string, string, string];
     if (this.total && (Number(n) !== this.total || id !== this.id)) throw new Error("QR de outro log");

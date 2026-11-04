@@ -4,7 +4,7 @@ import { gerarPartesQr, MontadorQr, partesParaImagens, TAMANHO_PARTE } from "./q
 
 function backupGrande(n = 200) {
   const o = op({ id: "a1b2c3d4-0000-4000-8000-000000000000" });
-  const es = Array.from({ length: n }, (_, i) => ({ ...entrada(o, `PU5A${String.fromCharCode(65 + (i % 26))}`, i, { texto: `Mensagem número ${i} com acentuação e ${Math.random()}` }), seq: i + 1 }));
+  const es = Array.from({ length: n }, (_, i) => ({ ...entrada(o, `PU5A${String.fromCharCode(65 + (i % 26))}`, i, { texto: `Mensagem número ${i} com acentuação ${(i * 7919) % 10007}` }), seq: i + 1 }));
   return gerarBackup(o, [estacao("PU5ONI")], es);
 }
 
@@ -44,4 +44,20 @@ test("gera imagens PNG", async () => {
   const imgs = await partesParaImagens(gerarPartesQr(gerarBackup(op(), [], [])));
   expect(imgs).toHaveLength(1);
   expect(imgs[0]).toMatch(/^data:image\/png;base64,/);
+});
+
+test("parte que começa ou termina com espaço (válido em base45) é montada sem perda", () => {
+  let achado = false;
+  for (let k = 0; k < 300 && !achado; k++) {
+    const o = op({ id: "abcd0000-0000-4000-8000-000000000000" });
+    const es = Array.from({ length: 60 + k }, (_, i) => ({ ...entrada(o, "PU5ONI", i, { texto: `msg ${(i * 7919 + k * 104729) % 100003}` }), seq: i + 1 }));
+    const b = gerarBackup(o, [], es);
+    const partes = gerarPartesQr(b);
+    if (!partes.some((p) => p.endsWith(" ") || p.slice(p.indexOf(":") + 1).startsWith(" "))) continue;
+    achado = true;
+    const m = new MontadorQr();
+    partes.forEach((p) => m.adicionar(p));
+    expect(m.resultado()).toEqual(b);
+  }
+  expect(achado).toBe(true);
 });
