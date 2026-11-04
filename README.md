@@ -9,6 +9,8 @@ QR code e boletins para SSTV, APRS e voz.
 ## Como usar
 
 ### Abrir e instalar
+Endereço: **https://warcwb.github.io/radiolog/** (publicado automaticamente a cada atualização do `main`).
+
 1. Abra o endereço do RadioLog no Chrome (Android ou Windows) ou no Safari (iPhone) **com internet, uma vez**.
 2. Para instalar como app:
    - **Android:** menu ⋮ → **Adicionar à tela inicial**.
