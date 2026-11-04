@@ -8,7 +8,7 @@ const SITUACAO = { ATIVA: "ativa", SAIDA: "encerrou", SEM_CONTATO: "sem contato"
 
 export function roteiroVoz(op: Operacao, estacoes: Estacao[], entradas: Entrada[], agoraIso: string): string {
   const l = [`Aqui ${soletrar(op.estacaoLog.indicativo)}, boletim da operação ${falarNumero(op.numero)}, ${op.nome}. Hora ${formatarHora(agoraIso, op.fuso)}.`];
-  for (const s of situacaoEstacoes(op, estacoes, entradas, agoraIso)) {
+  for (const s of situacaoEstacoes(op, estacoes, entradas, agoraIso, { paraBoletim: true })) {
     const quem = s.estacao.indicativo ? soletrar(s.estacao.indicativo) : s.estacao.tatico;
     const quando = s.situacao === "SEM_CONTATO" ? ` há ${s.minutosSemContato} minutos` : s.ultimaHora ? `, último contato ${formatarHora(s.ultimaHora, op.fuso)}` : "";
     const onde = s.ultimoLocal ? `, local ${s.ultimoLocal}` : "";

@@ -2,7 +2,7 @@ import { MODOS, type ModoSstv, type PaginaSstv } from "./sstvLayout";
 
 /** Desenha uma página do boletim no tamanho exato do modo SSTV: alto contraste, letra grande. */
 export function desenharPagina(p: PaginaSstv, modo: ModoSstv): HTMLCanvasElement {
-  const { largura, altura, linhas } = MODOS[modo];
+  const { largura, altura, linhas, colunas } = MODOS[modo];
   const c = document.createElement("canvas");
   c.width = largura;
   c.height = altura;
@@ -17,7 +17,9 @@ export function desenharPagina(p: PaginaSstv, modo: ModoSstv): HTMLCanvasElement
   ctx.fillStyle = "#fff";
   ctx.font = `bold ${Math.floor(h * 0.7)}px sans-serif`;
   ctx.fillText(p.cabecalho, 4, h / 2);
-  ctx.font = `bold ${Math.floor(h * 0.85)}px sans-serif`;
+  // monoespaçada: 0,6 em por caractere, para a linha inteira caber na largura do modo
+  const corpo = Math.min(Math.floor(h * 0.85), Math.floor((largura - 8) / colunas / 0.6));
+  ctx.font = `bold ${corpo}px monospace`;
   p.linhas.forEach((l, i) => {
     const y = h * (i + 1.25);
     if (l.emergencia) {

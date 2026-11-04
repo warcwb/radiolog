@@ -28,3 +28,14 @@ test("texto longo é dividido em partes numeradas", () => {
   expect(partes.map((p) => p.replace(/^\d\/\d OP031 PU5ONI /, "")).join("")).toBe("A".repeat(150));
   expect(aprsTexto(op(), "PU5ONI", "ok tudo bem")).toEqual(["OP031 PU5ONI OK TUDO BEM"]);
 });
+
+test("local de entrada sensível não vai ao ar", () => {
+  const o = op();
+  const es = [
+    { ...entrada(o, "PU5ONI", 0, { local: "Trilha" }), seq: 1 },
+    { ...entrada(o, "PU5ONI", 5, { local: "Rua X 123", texto: "ferido removido" }), seq: 2 },
+  ];
+  const [m] = aprsStatusEstacoes(o, [estacao("PU5ONI", "CAMPO")], es, min(10));
+  expect(m).toContain("TRILHA");
+  expect(m).not.toContain("RUA X");
+});

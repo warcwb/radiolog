@@ -41,3 +41,10 @@ test("detecta só o TXT nativo", () => {
   expect(ehTxtNativo("LOG QRG145.210MHz")).toBe(false);
   expect(() => interpretarTxtNativo("LOG QRG")).toThrow("Não é um TXT do RadioLog");
 });
+
+test("campos com | { e tabulação também voltam sem perda", () => {
+  const o = op();
+  const es = [{ ...entrada(o, "Equipe {1}", 0, { local: "Rua A | B", texto: "chegou {ok}\tfim", numMensagem: "N {2}" }), seq: 1 }, { ...entrada(o, "PU5ONI", 1, { local: "Ponto {A}" }), seq: 2 }];
+  const p = interpretarTxtNativo(exportarTxt(o, [], es));
+  expect(p.entradas).toEqual(es.map(({ operacaoId: _, ...r }) => r));
+});

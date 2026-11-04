@@ -16,12 +16,13 @@ const NAO_OUVIDA = new Set(["CORRECAO", "OBSERVACAO", "TROCA_OPERADOR"]);
 export const contaComoOuvida = (e: Entrada) => !NAO_OUVIDA.has(e.tipo);
 export const ehDeCampo = (e: Estacao) => e.funcao === "CAMPO" || e.funcao === "MOVEL";
 
-export function situacaoEstacoes(op: Operacao, estacoes: Estacao[], entradas: Entrada[], agoraIso: string): SituacaoEstacao[] {
+/** paraBoletim: ignora o local de entradas sensíveis (o que vai ao ar). */
+export function situacaoEstacoes(op: Operacao, estacoes: Estacao[], entradas: Entrada[], agoraIso: string, opcoes: { paraBoletim?: boolean } = {}): SituacaoEstacao[] {
   const agora = new Date(agoraIso).getTime();
   const r = estacoes.map((estacao): SituacaoEstacao => {
     const ouvidas = entradas.filter((e) => e.de === estacao.chave && contaComoOuvida(e));
     const ultima = ouvidas.reduce<Entrada | undefined>((a, e) => (!a || e.hora >= a.hora ? e : a), undefined);
-    const comLocal = [...ouvidas].reverse().find((e) => e.local);
+    const comLocal = [...ouvidas].reverse().find((e) => e.local && !(opcoes.paraBoletim && e.sensivel));
     const s: SituacaoEstacao = { estacao, situacao: "ATIVA", ultimoLocal: comLocal?.local ?? estacao.local };
     if (!ultima) return s;
     const minutos = Math.floor((agora - new Date(ultima.hora).getTime()) / 60000);

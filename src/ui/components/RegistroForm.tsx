@@ -1,5 +1,6 @@
-import { useState, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { indicativoEstrangeiro, indicativoValido, normalizarIndicativo } from "../../domain/callsign";
+import { detectarSensivel } from "../../domain/sensitive";
 import { horaDigitadaParaIso } from "../../domain/time";
 import type { Entrada, Estacao, Funcao, NovaEntradaInput, Operacao, Precedencia, TipoEntrada } from "../../domain/types";
 import { ROTULO_TIPO } from "../../export/rotulos";
@@ -36,6 +37,10 @@ export function RegistroForm({ op, estacoes, entradas, operador, agora, aoRegist
   const [mais, setMais] = useState(false);
   const [erro, setErro] = useState("");
   const [cadastro, setCadastro] = useState<Estacao | null>(null);
+  const [sensivelManual, setSensivelManual] = useState<boolean | null>(null);
+  const [enviando, setEnviando] = useState(false);
+  const ocupado = useRef(false);
+  const sensivel = sensivelManual ?? detectarSensivel(texto);
   const encerrada = op.status === "ENCERRADA";
 
   const termo = chaveDe(ind);
@@ -51,25 +56,34 @@ export function RegistroForm({ op, estacoes, entradas, operador, agora, aoRegist
 
   const limpar = () => {
     setInd(""); setQsa(undefined); setQrk(undefined); setTipo("SITUACAO"); setTexto(""); setHora("");
-    setPrec("ROTINA"); setNumMsg(""); setLocal(""); setMais(false); setErro(""); setCadastro(null);
+    setPrec("ROTINA"); setNumMsg(""); setLocal(""); setMais(false); setErro(""); setCadastro(null); setSensivelManual(null);
   };
 
   const enviar = async (t: TipoEntrada, de: string, nova?: Estacao) => {
+    if (ocupado.current) return; // evita gravar duas vezes com toque duplo
     let h: string;
     try {
-      h = hora.trim() ? horaDigitadaParaIso(hora, op.data, agora()) : agora();
+      h = hora.trim() ? horaDigitadaParaIso(hora, op.data, agora(), op.fuso) : agora();
     } catch (e) {
       setErro((e as Error).message);
       return;
     }
     const input: NovaEntradaInput = {
-      hora: h, operador, tipo: t, de, texto, local, precedencia: prec, numMensagem: numMsg,
+      hora: h, operador, tipo: t, de, texto, local, precedencia: prec, numMensagem: numMsg, sensivel,
       ...(qsa !== undefined ? { qsa } : {}), ...(qrk !== undefined ? { qrk } : {}),
     };
-    if (await aoRegistrar(input, nova)) limpar();
+    ocupado.current = true;
+    setEnviando(true);
+    try {
+      if (await aoRegistrar(input, nova)) limpar();
+    } finally {
+      ocupado.current = false;
+      setEnviando(false);
+    }
   };
 
   const registrar = async () => {
+    if (ocupado.current) return;
     setErro("");
     if (!termo) return setErro("Informe o indicativo");
     if (DE_ESTACAO.has(tipo) && !estacoes.some((e) => e.chave === termo)) {
@@ -99,6 +113,9 @@ export function RegistroForm({ op, estacoes, entradas, operador, agora, aoRegist
         {Rec && <button type="button" onClick={ditar} aria-label="Ditar">🎤</button>}
       </div>
       <small>O ditado do teclado do celular funciona offline.</small>
+      <label className="marcar">
+        <input type="checkbox" checked={sensivel} onChange={(e) => setSensivelManual(e.target.checked)} /> Dado sensível (não vai ao ar)
+      </label>
     </div>
   );
 
@@ -107,7 +124,7 @@ export function RegistroForm({ op, estacoes, entradas, operador, agora, aoRegist
       <form className="registro" onSubmit={(e) => e.preventDefault()}>
         <p>Operação encerrada: só é possível registrar observações e correções.</p>
         {campoTexto}
-        <button className="primario" type="button" onClick={() => void enviar("OBSERVACAO", "")}>Registrar observação</button>
+        <button className="primario" type="button" disabled={enviando} onClick={() => void enviar("OBSERVACAO", "")}>Registrar observação</button>
       </form>
     );
   }
@@ -149,9 +166,9 @@ export function RegistroForm({ op, estacoes, entradas, operador, agora, aoRegist
       {cadastro && <MiniCadastro estacao={cadastro} aoSalvar={(e) => void enviar(tipo === "SITUACAO" ? "ENTRADA_REDE" : tipo, e.chave, e)} aoCancelar={() => setCadastro(null)} />}
       {erro && <p className="erro" role="alert">{erro}</p>}
       <div className="acoes">
-        <button className="primario registrar" type="button" onClick={() => void registrar()}>REGISTRAR</button>
-        <button type="button" onClick={() => void enviar("IDENTIFICACAO", op.estacaoLog.indicativo || operador)}>IDENT</button>
-        <button type="button" onClick={() => void enviar("NAO_IDENTIFICADA", ind.trim() || "?")}>Não identificada (?)</button>
+        <button className="primario registrar" type="button" disabled={enviando} onClick={() => void registrar()}>REGISTRAR</button>
+        <button type="button" disabled={enviando} onClick={() => void enviar("IDENTIFICACAO", op.estacaoLog.indicativo || operador)}>IDENT</button>
+        <button type="button" disabled={enviando} onClick={() => void enviar("NAO_IDENTIFICADA", ind.trim() || "?")}>Não identificada (?)</button>
       </div>
     </form>
   );

@@ -2,7 +2,7 @@ import { alertasSemContato } from "../domain/alerts";
 import { ehDeCampo, situacaoEstacoes } from "../domain/stations";
 import { formatarHora } from "../domain/time";
 import type { Entrada, Estacao, Operacao } from "../domain/types";
-import { textoNoAr, urgentes } from "./comum";
+import { pendenciaNoAr, textoNoAr, urgentes } from "./comum";
 
 export type ModoSstv = "ROBOT36" | "MARTIN1" | "SCOTTIE1" | "PD120";
 export const MODOS: Record<ModoSstv, { largura: number; altura: number; linhas: number; colunas: number }> = {
@@ -39,7 +39,7 @@ export function quebrar(texto: string, colunas: number): string[] {
 
 function conteudo(op: Operacao, estacoes: Estacao[], entradas: Entrada[], modelo: ModeloBoletim, agoraIso: string): LinhaSstv[] {
   const item = (texto: string, emergencia = false) => ({ texto, emergencia });
-  const sit = situacaoEstacoes(op, estacoes, entradas, agoraIso);
+  const sit = situacaoEstacoes(op, estacoes, entradas, agoraIso, { paraBoletim: true });
   switch (modelo) {
     case "SITUACAO":
       return [
@@ -53,14 +53,14 @@ function conteudo(op: Operacao, estacoes: Estacao[], entradas: Entrada[], modelo
     case "PENDENCIAS": {
       const l = [
         ...alertasSemContato(op, estacoes, entradas, agoraIso).map((a) => item(`${a.chave} SEM CONTATO ${a.minutos}MIN`, true)),
-        ...(op.encerramento?.pendencias ?? []).map((p) => item(`${p.estacao} ${p.texto}`)),
+        ...(op.encerramento?.pendencias ?? []).map((p) => item(pendenciaNoAr(p))),
       ];
       return l.length ? l : [item("Sem pendências")];
     }
     case "ENCERRAMENTO": {
       const enc = op.encerramento;
       if (!enc) return [item("Operação em andamento")];
-      return [item(`Encerrada ${formatarHora(enc.hora, op.fuso)}`), item(`Estações: ${enc.totalEstacoes}`), ...enc.pendencias.map((p) => item(`${p.estacao} ${p.texto}`, true))];
+      return [item(`Encerrada ${formatarHora(enc.hora, op.fuso)}`), item(`Estações: ${enc.totalEstacoes}`), ...enc.pendencias.map((p) => item(pendenciaNoAr(p), true))];
     }
   }
 }

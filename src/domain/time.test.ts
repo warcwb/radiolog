@@ -27,3 +27,9 @@ test("formata no fuso local ou UTC", () => {
   expect(formatarHora("2026-10-31T17:05:00.000Z", "LOCAL")).toBe("14:05");
   expect(formatarHora("2026-10-31T17:05:00.000Z", "UTC")).toBe("17:05Z");
 });
+
+test("operação em UTC: hora digitada é Zulu", () => {
+  expect(horaDigitadaParaIso("14:05", "2026-10-31", "2026-10-31T17:10:00.000Z", "UTC")).toBe("2026-10-31T14:05:00.000Z");
+  expect(horaDigitadaParaIso("00:10", "2026-10-31", "2026-10-31T23:50:00.000Z", "UTC")).toBe("2026-11-01T00:10:00.000Z");
+  expect(horaDigitadaParaIso("09:30", "2026-10-31", "", "UTC")).toBe("2026-10-31T09:30:00.000Z");
+});

@@ -14,7 +14,7 @@ export function limparAprs(s: string): string {
 const prefixo = (op: Operacao, chave: string) => `OP${numeroCurto(op.numero)} ${limparAprs(chave)} `;
 
 export function aprsStatusEstacoes(op: Operacao, estacoes: Estacao[], entradas: Entrada[], agoraIso: string): string[] {
-  return situacaoEstacoes(op, estacoes, entradas, agoraIso).map((s) => {
+  return situacaoEstacoes(op, estacoes, entradas, agoraIso, { paraBoletim: true }).map((s) => {
     const hora = s.ultimaHora ? formatarHora(s.ultimaHora, op.fuso).replace(":", "") : "";
     return limparAprs(`${prefixo(op, s.estacao.chave)}${STATUS[s.situacao]} ${s.ultimoLocal} ${hora}`).slice(0, APRS_MAX);
   });

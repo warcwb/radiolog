@@ -8,6 +8,9 @@ const RE_ENTRADA = /^(\d{1,2}:\d{2})\s+(\S+)\s*(.*)$/;
 const RE_NOME = /^[A-ZÀ-Ú][a-zà-ú]+$/;
 const RE_AMBIGUO = /\b(maioria|quase todos|maior parte)\b/i;
 
+/** Frase de segurança que não diz quantos ficaram sem confirmação. */
+export const fraseAmbigua = (texto: string) => RE_AMBIGUO.test(texto);
+
 /** Interpreta o log em .txt no formato do colega (ver docs/referencias). Nada é descartado. */
 export function interpretarTxtColega(texto: string, operador: string): ImportPreview {
   const op: ImportPreview["operacao"] = {};

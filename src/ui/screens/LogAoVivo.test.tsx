@@ -167,3 +167,47 @@ test("as fileiras de sinal mostram QSA e QRK", async () => {
   expect(await screen.findByText("QSA", { selector: ".notas span" })).toBeInTheDocument();
   expect(screen.getByText("QRK", { selector: ".notas span" })).toBeInTheDocument();
 });
+
+test("toque duplo em REGISTRAR grava uma vez só", async () => {
+  let liberar: () => void = () => undefined;
+  const chamadas: unknown[] = [];
+  const lento = (...args: Parameters<typeof repo.acrescentarEntrada>) => { chamadas.push(args); return new Promise<never>((_, rej) => { liberar = () => rej(new Error("x")); }); };
+  renderizar({ acoes: { acrescentarEntrada: lento } });
+  await userEvent.type(await screen.findByLabelText("Indicativo"), "PU5ONI");
+  const b = screen.getByRole("button", { name: "REGISTRAR" });
+  await userEvent.click(b);
+  await userEvent.click(b);
+  await userEvent.type(screen.getByLabelText("Texto"), "{Enter}");
+  expect(chamadas).toHaveLength(1);
+  liberar();
+});
+
+test("operador marca e desmarca dado sensível antes de gravar", async () => {
+  renderizar();
+  await userEvent.type(await screen.findByLabelText("Indicativo"), "PU5ONI");
+  await userEvent.type(screen.getByLabelText("Texto"), "Maria Souza levada ao posto 2");
+  const caixa = screen.getByLabelText("Dado sensível (não vai ao ar)");
+  expect(caixa).not.toBeChecked();
+  await userEvent.click(caixa);
+  await userEvent.click(screen.getByRole("button", { name: "REGISTRAR" }));
+  await screen.findByText("#2");
+  await userEvent.type(screen.getByLabelText("Indicativo"), "PU5ONI");
+  await userEvent.type(screen.getByLabelText("Texto"), "vítima resgatada");
+  expect(screen.getByLabelText("Dado sensível (não vai ao ar)")).toBeChecked();
+  await userEvent.click(screen.getByLabelText("Dado sensível (não vai ao ar)"));
+  await userEvent.click(screen.getByRole("button", { name: "REGISTRAR" }));
+  await screen.findByText("#3");
+  const es = await entradas();
+  expect(es[1]?.sensivel).toBe(true);
+  expect(es[2]?.sensivel).toBe(false);
+});
+
+test("hora digitada em operação UTC é Zulu", async () => {
+  await repo.salvarOperacao({ ...o, fuso: "UTC" });
+  renderizar();
+  await userEvent.type(await screen.findByLabelText("Indicativo"), "PU5ONI");
+  await userEvent.type(screen.getByLabelText("Hora"), "17:05");
+  await userEvent.click(screen.getByRole("button", { name: "REGISTRAR" }));
+  await screen.findByText("#2");
+  expect((await entradas())[1]?.hora).toBe("2026-10-31T17:05:00.000Z");
+});

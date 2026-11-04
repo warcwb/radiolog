@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { montarBoletim } from "../../bulletins/sstvLayout";
 import { desenharPagina } from "../../bulletins/sstvRender";
 import { validarEncerramento } from "../../domain/closing";
 import type { Operacao } from "../../domain/types";
 import { gerarIcs309 } from "../../export/ics309";
+import { fraseAmbigua } from "../../import/txtColega";
 import { encerrarOperacao } from "../../store/repo";
 import { Campo } from "../components/Campo";
 import { baixarArquivo } from "../download";
@@ -18,6 +19,13 @@ export function Encerramento({ id, agoraFixo, baixar = baixarArquivo }: Props) {
   const [pendencias, setPendencias] = useState("");
   const [responsavel, setResponsavel] = useState(config.indicativo);
   const [entregueA, setEntregueA] = useState("");
+  const [sugeriu, setSugeriu] = useState(false);
+  useEffect(() => {
+    if (sugeriu || !entradas.length) return;
+    setSugeriu(true);
+    const sugestoes = entradas.filter((e) => fraseAmbigua(e.texto)).map((e) => `Confirmar: ${e.texto}`);
+    if (sugestoes.length) setPendencias((p) => p || sugestoes.join("\n"));
+  }, [entradas, sugeriu]);
   if (!op) return <p>Carregando…</p>;
   const v = validarEncerramento(op, estacoes, entradas, justificativa);
   const agora = agoraFixo ?? new Date().toISOString();

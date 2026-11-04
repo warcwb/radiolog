@@ -47,3 +47,10 @@ test("com todas as saídas, encerra direto", async () => {
   expect(await screen.findByText("Todas as equipes de campo registraram saída.")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Encerrar operação" })).toBeEnabled();
 });
+
+test("frase ambígua sobre segurança vira pendência sugerida", async () => {
+  const o = (await repo.carregarOperacao("op1"))!.op;
+  await repo.acrescentarEntrada(o, { hora: min(2), operador: "PU5NOC", tipo: "OBSERVACAO", de: "", texto: "35 pessoas, a grande maioria desceu em segurança" }, min(2));
+  render(<Encerramento id="op1" agoraFixo={min(120)} baixar={vi.fn()} />);
+  expect(await screen.findByLabelText("Pendências (uma por linha)")).toHaveValue("Confirmar: 35 pessoas, a grande maioria desceu em segurança");
+});

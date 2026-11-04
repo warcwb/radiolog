@@ -63,3 +63,13 @@ test("palavra maior que a linha é cortada", () => {
   const p = montarBoletim(o, [estacao("PU5AA", "CAMPO", { local: "X".repeat(60) })], [{ ...entrada(o, "PU5AA", 0), seq: 1 }], "EQUIPES", "ROBOT36", min(1));
   p.flatMap((x) => x.linhas).forEach((l) => expect([...l.texto].length).toBeLessThanOrEqual(24));
 });
+
+test("pendências com dado sensível não vão ao ar", () => {
+  const enc = { ...o, encerramento: { hora: min(120), totalEstacoes: 1, pendencias: [{ estacao: "", texto: "Vitima Joao (41) 99999-1234 no HC" }, { estacao: "", texto: "devolver rádio" }], justificativa: "", responsavel: "PU5NOC", entregueA: "" } };
+  for (const modelo of ["PENDENCIAS", "ENCERRAMENTO"] as const) {
+    const t = montarBoletim(enc, [], [], modelo, "PD120", min(121)).flatMap((x) => x.linhas).map((l) => l.texto).join(" ");
+    expect(t).toContain("[dado reservado]");
+    expect(t).not.toMatch(/Joao|99999/);
+    expect(t).toContain("devolver rádio");
+  }
+});
